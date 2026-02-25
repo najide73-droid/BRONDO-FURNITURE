@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brando Furniture — Premium Handcrafted Furniture</title>
+    <meta name="description"
+        content="Brando Furniture offers premium handcrafted furniture built with love, quality, and tradition. Shop sofas, beds, tables, chairs, and more.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" onclick="goHome()">
+                <span class="logo-icon">B</span>
+                <div class="logo-text">
+                    <span class="logo-name">BRANDO</span>
+                    <span class="logo-sub">FURNITURE</span>
+                </div>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#" class="nav-link active" onclick="goHome()">Home</a>
+                <a href="#" class="nav-link" onclick="showShop()">Shop</a>
+                <a href="#about" class="nav-link">About Us</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <button class="search-toggle" onclick="toggleSearch()" aria-label="Search">
+                    <ion-icon name="search-outline"></ion-icon>
+                </button>
+                <button class="cart-toggle" id="cart-btn" onclick="toggleCart()">
+                    <ion-icon name="bag-outline"></ion-icon>
+                    <span class="cart-badge scale-0" id="cart-badge">0</span>
+                </button>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <!-- Search Bar -->
+        <div class="search-bar hidden" id="search-bar">
+            <div class="nav-container">
+                <input type="text" id="search-input" placeholder="Search furniture..." oninput="handleSearch()">
+                <button onclick="toggleSearch()"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-label fade-up">Handcrafted with Love</p>
+            <h1 class="hero-title fade-up delay-1">Furniture That<br>Tells a Story</h1>
+            <p class="hero-subtitle fade-up delay-2">Every piece is crafted with passion and precision.<br>Welcome to
+                Brando Furniture — where quality meets elegance.</p>
+            <div class="hero-buttons fade-up delay-3">
+                <button class="btn btn-gold" onclick="showShop()">Explore Collection</button>
+                <a href="#about" class="btn btn-glass">Our Story</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="section categories-section">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Browse By</p>
+                <h2 class="section-title">Categories</h2>
+            </div>
+            <div class="categories-grid" id="categories-grid">
+                <!-- Categories rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="shop" class="section shop-section">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Our Collection</p>
+                <h2 class="section-title">Featured Products</h2>
+            </div>
+            <div class="product-filters" id="product-filters">
+                <button class="filter-btn active" onclick="filterProducts('All')">All</button>
+            </div>
+            <div class="product-grid" id="product-grid">
+                <!-- Products rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-images fade-up">
+                    <div class="about-img-main">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800"
+                            alt="Premium furniture showroom">
+                    </div>
+                    <div class="about-img-accent">
+                        <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&q=80&w=400"
+                            alt="Craftsman at work">
+                    </div>
+                    <div class="about-badge">
+                        <span class="badge-number">25+</span>
+                        <span class="badge-text">Years of<br>Excellence</span>
+                    </div>
+                </div>
+                <div class="about-content fade-up delay-1">
+                    <p class="section-tag">Our Story</p>
+                    <h2 class="section-title left">About Brando Furniture</h2>
+                    <p class="about-text">
+                        Brando Furniture was born from a father's passion for woodworking and a family's dedication to
+                        creating beautiful, lasting furniture. What started as a small workshop has grown into a trusted
+                        name in premium furniture — but our values remain the same.
+                    </p>
+                    <p class="about-text">
+                        Every piece that leaves our shop carries the warmth of handcraftsmanship and the promise of
+                        quality. We don't just sell furniture — we create heirlooms that your family will cherish for
+                        generations.
+                    </p>
+                    <div class="about-values">
+                        <div class="about-value">
+                            <ion-icon name="shield-checkmark-outline"></ion-icon>
+                            <div>
+                                <h4>Quality Guaranteed</h4>
+                                <p>Built with the finest materials and techniques</p>
+                            </div>
+                        </div>
+                        <div class="about-value">
+                            <ion-icon name="heart-outline"></ion-icon>
+                            <div>
+                                <h4>Made with Love</h4>
+                                <p>Every piece is a labor of passion</p>
+                            </div>
+                        </div>
+                        <div class="about-value">
+                            <ion-icon name="people-outline"></ion-icon>
+                            <div>
+                                <h4>Family Legacy</h4>
+                                <p>Trusted by families for over 25 years</p>
+                            </div>
+                        </div>
+                        <div class="about-value">
+                            <ion-icon name="leaf-outline"></ion-icon>
+                            <div>
+                                <h4>Sustainable</h4>
+                                <p>Responsibly sourced, eco-friendly wood</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials-section">
+        <div class="container">
+            <div class="section-header light">
+                <p class="section-tag">What People Say</p>
+                <h2 class="section-title">Customer Reviews</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-up">
+                    <div class="stars">★★★★★</div>
+                    <p>"The quality of the sofa we bought is incredible. It's been 3 years and it still looks brand new.
+                        Brando Furniture is the real deal!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div>
+                            <h4>Rahul M.</h4>
+                            <span>Verified Buyer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-up delay-1">
+                    <div class="stars">★★★★★</div>
+                    <p>"Beautiful dining table that became the centerpiece of our home. The craftsmanship is outstanding
+                        and the delivery was perfect."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div>
+                            <h4>Savita K.</h4>
+                            <span>Verified Buyer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-up delay-2">
+                    <div class="stars">★★★★★</div>
+                    <p>"I furnished my entire apartment from Brando. The quality and pricing is unbeatable. Highly
+                        recommend to everyone!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">A</div>
+                        <div>
+                            <h4>Ahmed J.</h4>
+                            <span>Verified Buyer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact-section">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Get in Touch</p>
+                <h2 class="section-title">Visit Our Showroom</h2>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info-card fade-up">
+                    <div class="contact-item">
+                        <ion-icon name="location-outline"></ion-icon>
+                        <div>
+                            <h4>Showroom</h4>
+                            <p>EK Tower, Perinthalmanna Road<br>School Padi, Tirurkad, Malappuram</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <ion-icon name="call-outline"></ion-icon>
+                        <div>
+                            <h4>Call Us</h4>
+                            <p>+91 XXXXX XXXXX</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <ion-icon name="time-outline"></ion-icon>
+                        <div>
+                            <h4>Showroom Hours</h4>
+                            <p>Mon – Sat: 9 AM – 8 PM<br>Sunday: 10 AM – 6 PM</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <ion-icon name="logo-whatsapp"></ion-icon>
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>+91 XXXXX XXXXX</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-wrapper fade-up delay-1">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3413.456!2d76.24483!3d10.96885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDU4JzA3LjkiTiA3NsKwMTQnNDEuNCJF!5e0!3m2!1sen!2sin!4v1710000000000"
+                        width="100%" height="100%" style="border:0;border-radius:20px;" allowfullscreen=""
+                        loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay hidden" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar translate-x-full" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button onclick="toggleCart()" class="close-cart"><ion-icon name="close-outline"></ion-icon></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <div class="empty-cart">
+                <ion-icon name="bag-outline"></ion-icon>
+                <p>Your cart is empty</p>
+                <button onclick="toggleCart(); showShop();" class="btn btn-gold-sm">Start Shopping</button>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total">₹0</span>
+            </div>
+            <button onclick="openCheckout()" class="btn btn-gold full">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="nav-logo footer-logo">
+                        <span class="logo-icon">B</span>
+                        <div class="logo-text">
+                            <span class="logo-name">BRANDO</span>
+                            <span class="logo-sub">FURNITURE</span>
+                        </div>
+                    </div>
+                    <p>Handcrafted furniture made with love, built to last generations. Your home deserves the best.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="#" onclick="goHome()">Home</a>
+                    <a href="#" onclick="showShop()">Shop</a>
+                    <a href="#about">About Us</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Categories</h4>
+                    <a href="#" onclick="filterProducts('Living Room')">Living Room</a>
+                    <a href="#" onclick="filterProducts('Bedroom')">Bedroom</a>
+                    <a href="#" onclick="filterProducts('Dining')">Dining</a>
+                    <a href="#" onclick="filterProducts('Office')">Office</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <a href="#"><ion-icon name="logo-instagram"></ion-icon> Instagram</a>
+                    <a href="#"><ion-icon name="logo-facebook"></ion-icon> Facebook</a>
+                    <a href="#"><ion-icon name="logo-whatsapp"></ion-icon> WhatsApp</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Brando Furniture. All rights reserved. | Crafted with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast translate-y-24" id="toast">
+        <ion-icon name="checkmark-circle"></ion-icon>
+        <span>Added to cart!</span>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script>
+        // Copy your Firebase config from the guide and paste it below!
+        const firebaseConfig = {
+            apiKey: "REPLACE_WITH_YOUR_KEY",
+            authDomain: "REPLACE_WITH_YOUR_KEY",
+            projectId: "REPLACE_WITH_YOUR_KEY",
+            storageBucket: "REPLACE_WITH_YOUR_KEY",
+            messagingSenderId: "REPLACE_WITH_YOUR_KEY",
+            appId: "REPLACE_WITH_YOUR_KEY"
+        };
+        // Initialize Firebase (Compat mode for simple transition)
+        if (firebaseConfig.apiKey !== "REPLACE_WITH_YOUR_KEY") {
+            firebase.initializeApp(firebaseConfig);
+            window.db = firebase.firestore();
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

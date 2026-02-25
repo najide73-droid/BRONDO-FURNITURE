@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brando Furniture — Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #b8860b;
+            --gold-light: #d4a745;
+            --dark: #1a1a1a;
+            --bg: #f4f1ec;
+            --bg-card: #ffffff;
+            --text: #333;
+            --text-light: #888;
+            --green: #22c55e;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --orange: #f59e0b;
+            --font: 'Outfit', sans-serif;
+            --radius: 14px;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .admin-header {
+            background: var(--dark);
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-brand .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gold);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .admin-brand h1 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .admin-brand span {
+            color: var(--gold-light);
+            font-size: 0.7rem;
+            font-weight: 400;
+            display: block;
+            letter-spacing: 2px;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .admin-btn {
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-btn.gold {
+            background: var(--gold);
+            color: white;
+        }
+
+        .admin-btn.gold:hover {
+            background: var(--gold-light);
+        }
+
+        .admin-btn.outline {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .admin-btn.outline:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-top: 8px;
+        }
+
+        .stat-card .stat-sub {
+            font-size: 0.72rem;
+            color: var(--green);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            color: var(--text-light);
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab.active {
+            background: var(--dark);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--bg);
+        }
+
+        /* Orders Table */
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-light);
+            background: var(--bg);
+        }
+
+        td {
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: rgba(0, 0, 0, 0.01);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-confirmed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-delivered {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .order-items-list {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        .order-items-list span {
+            display: block;
+        }
+
+        select.status-select {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            font-family: var(--font);
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-card .brand-icon {
+            margin: 0 auto 20px;
+            width: 60px;
+            height: 60px;
+            font-size: 1.8rem;
+        }
+
+        .login-card h2 {
+            margin-bottom: 24px;
+            font-size: 1.4rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-family: var(--font);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            background: var(--gold-light);
+        }
+
+        .error-msg {
+            color: var(--red);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        /* Products Tab Enhancements */
+        .product-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding: 24px;
+            background: var(--bg);
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+        }
+
+        .product-form div {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .product-form input,
+        .product-form select,
+        .product-form textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: var(--font);
+        }
+
+        .product-form .full-width {
+            grid-column: span 2;
+        }
+
+        .admin-img-preview {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #eee;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            .product-form {
+                grid-template-columns: 1fr;
+            }
+
+            .product-form .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="login-overlay">
+        <div class="login-card">
+            <div class="brand-icon">B</div>
+            <h2>Admin Login</h2>
+            <div id="login-error" class="error-msg">Password is incorrect. Please retry!</div>
+            <input type="password" id="admin-pass" class="login-input" placeholder="Enter Password"
+                onkeyup="checkEnter(event)">
+            <button class="login-btn" onclick="verifyLogin()">Login to Dashboard</button>
+        </div>
+    </div>
+
+    <header class="admin-header">
+        <div class="admin-brand">
+            <div class="brand-icon">B</div>
+            <div>
+                <h1>BRANDO FURNITURE</h1>
+                <span>Admin Dashboard</span>
+            </div>
+        </div>
+        <div class="admin-actions">
+            <a href="index.html" class="admin-btn outline">← Visit Store</a>
+            <button class="admin-btn gold" onclick="loadOrders()">↻ Refresh</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-label">Total Orders</p>
+                <p class="stat-value" id="stat-orders">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Revenue</p>
+                <p class="stat-value" id="stat-revenue">₹0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Pending</p>
+                <p class="stat-value" id="stat-pending">0</p>
+                <p class="stat-sub">Needs attention</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Delivered</p>
+                <p class="stat-value" id="stat-delivered">0</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab(event, 'orders')">📦 Orders</button>
+            <button class="tab" onclick="switchTab(event, 'all-orders')">📋 All Orders</button>
+            <button class="tab" onclick="switchTab(event, 'products')">🪑 Products</button>
+        </div>
+
+        <!-- Orders Panel -->
+        <div id="orders-panel" class="panel active">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Recent Orders</h2>
+                </div>
+                <div id="orders-table">
+                    <div class="empty-state">
+                        <h3>No orders yet</h3>
+                        <p>Orders will appear here when customers place them</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Panel -->
+        <div id="products-panel" class="panel">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Manage Products</h2>
+                    <button class="admin-btn gold" onclick="toggleProductForm()">+ Add New Product</button>
+                </div>
+
+                <div id="product-form-container" style="display: none; border-bottom: 1px solid #eee;">
+                    <div class="product-form">
+                        <div>
+                            <label>Product Name</label>
+                            <input type="text" id="p-name" placeholder="e.g. Oak Dining Table">
+                        </div>
+                        <div>
+                            <label>Category</label>
+                            <select id="p-cat">
+                                <option value="Living Room">Living Room</option>
+                                <option value="Bedroom">Bedroom</option>
+                                <option value="Dining">Dining</option>
+                                <option value="Office">Office</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Price (₹)</label>
+                            <input type="number" id="p-price" placeholder="45000">
+                        </div>
+                        <div>
+                            <label>Product Image</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="text" id="p-image" placeholder="Image URL or upload ->" style="flex: 1;">
+                                <input type="file" id="p-file" accept="image/*" style="display: none;"
+                                    onchange="uploadImage(this)">
+                                <button class="admin-btn outline"
+                                    style="color:var(--text); padding: 8px; border-color: #ddd; background: #fff;"
+                                    onclick="document.getElementById('p-file').click()">
+                                    📷 Choose Photo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="full-width">
+                            <label>Description</label>
+                            <textarea id="p-desc" rows="2" placeholder="Describe the item..."></textarea>
+                        </div>
+                        <div class="full-width" style="flex-direction: row; gap: 10px;">
+                            <button class="admin-btn gold" onclick="saveProduct()">Save Product</button>
+                            <button class="admin-btn outline" style="color:var(--text)"
+                                onclick="toggleProductForm()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="products-table">
+                    <!-- Products rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // The SAME config as index.html
+        const firebaseConfig = {
+            apiKey: "REPLACE_WITH_YOUR_KEY",
+            authDomain: "REPLACE_WITH_YOUR_KEY",
+            projectId: "REPLACE_WITH_YOUR_KEY",
+            storageBucket: "REPLACE_WITH_YOUR_KEY",
+            messagingSenderId: "REPLACE_WITH_YOUR_KEY",
+            appId: "REPLACE_WITH_YOUR_KEY"
+        };
+        if (firebaseConfig.apiKey !== "REPLACE_WITH_YOUR_KEY") {
+            firebase.initializeApp(firebaseConfig);
+            window.db = firebase.firestore();
+        }
+
+        // --- Auth ---
+        function checkEnter(e) {
+            if (e.key === 'Enter') verifyLogin();
+        }
+
+        function verifyLogin() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === 'admin123') {
+                sessionStorage.setItem('brando_admin', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+            } else {
+                const error = document.getElementById('login-error');
+                error.style.display = 'block';
+                // Shake effect (simple)
+                const card = document.querySelector('.login-card');
+                card.style.transform = 'translateX(10px)';
+                setTimeout(() => card.style.transform = 'translateX(-10px)', 100);
+                setTimeout(() => card.style.transform = 'translateX(0)', 200);
+                document.getElementById('admin-pass').value = '';
+                document.getElementById('admin-pass').focus();
+            }
+        }
+
+        // Check auth on load
+        if (sessionStorage.getItem('brando_admin') === 'true') {
+            document.getElementById('login-overlay').style.display = 'none';
+        }
+
+        const formatPrice = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(p);
+
+        function switchTab(event, tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + '-panel').classList.add('active');
+            if (tab === 'products') loadProducts();
+        }
+
+        function loadOrders() {
+            if (window.db) {
+                window.db.collection('orders').orderBy('id', 'desc').get().then(snapshot => {
+                    const serverOrders = snapshot.docs.map(doc => doc.data());
+                    processOrders(serverOrders);
+                });
+            } else {
+                fetch('/api/orders').then(r => r.json()).then(serverOrders => {
+                    processOrders(serverOrders);
+                }).catch(() => {
+                    let orders = JSON.parse(localStorage.getItem('brando_orders') || '[]');
+                    renderOrders(orders);
+                });
+            }
+        }
+
+        function processOrders(serverOrders) {
+            const orders = serverOrders || [];
+            const lastId = localStorage.getItem('brando_last_order_id');
+            if (orders.length > 0) {
+                const latestOrder = orders[0];
+                if (lastId && latestOrder.id !== lastId) {
+                    alert("🎉 New Order Received!\nOrder ID: " + latestOrder.id + "\nCustomer: " + latestOrder.customer.name);
+                }
+                localStorage.setItem('brando_last_order_id', latestOrder.id);
+            }
+            localStorage.setItem('brando_orders', JSON.stringify(orders));
+            renderOrders(orders);
+        }
+
+        function renderOrders(orders) {
+            // Stats
+            document.getElementById('stat-orders').textContent = orders.length;
+            document.getElementById('stat-revenue').textContent = formatPrice(orders.reduce((s, o) => s + (o.total || 0), 0));
+            document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'Pending').length;
+            document.getElementById('stat-delivered').textContent = orders.filter(o => o.status === 'Delivered').length;
+
+            if (orders.length === 0) return;
+
+            const pendingOrders = orders.filter(o => o.status === 'Pending' || o.status === 'Confirmed');
+            renderOrderTable('orders-table', pendingOrders.length ? pendingOrders : orders.slice(0, 10));
+            renderOrderTable('all-orders-table', orders);
+        }
+
+        function renderOrderTable(containerId, orders) {
+            if (orders.length === 0) {
+                document.getElementById(containerId).innerHTML = '<div class="empty-state"><h3>No orders</h3></div>';
+                return;
+            }
+            document.getElementById(containerId).innerHTML = `
+                <table>
+                    <thead><tr>
+                        <th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th>
+                    </tr></thead>
+                    <tbody>${orders.map(o => `
+                        <tr>
+                            <td><strong>${o.id}</strong></td>
+                            <td>
+                                <strong>${o.customer?.name || 'N/A'}</strong><br>
+                                <span style="font-size:0.75rem;color:var(--text-light)">${o.customer?.mobile || ''}</span><br>
+                                <div style="font-size:0.7rem; color:var(--text-light); border-top: 1px solid #eee; margin-top: 5px; padding-top: 5px;">
+                                    ${o.customer?.address || ''}<br>
+                                    ${o.customer?.landmark ? `Landmark: ${o.customer.landmark}<br>` : ''}
+                                    ${o.customer?.city || ''}, ${o.customer?.state || ''} - ${o.customer?.pincode || ''}
+                                </div>
+                            </td>
+                            <td class="order-items-list">
+                                ${(o.items || []).map(i => `<span>${i.name} ×${i.quantity}</span>`).join('')}
+                            </td>
+                            <td><strong>${formatPrice(o.total || 0)}</strong></td>
+                            <td>${o.paymentMethod || 'COD'}</td>
+                            <td>
+                                <select class="status-select" onchange="updateStatus('${o.id}', this.value)">
+                                    ${['Pending', 'Confirmed', 'Delivered', 'Cancelled'].map(s =>
+                `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s}</option>`
+            ).join('')}
+                                </select>
+                            </td>
+                            <td style="font-size:0.75rem;color:var(--text-light)">${o.date || ''}</td>
+                        </tr>
+                    `).join('')}</tbody>
+                </table>`;
+        }
+
+        function updateStatus(id, status) {
+            if (window.db) {
+                window.db.collection('orders').doc(id).update({ status }).then(() => loadOrders());
+            } else {
+                fetch(`/api/orders/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                }).then(() => loadOrders());
+            }
+        }
+
+        // --- Product Management ---
+        function toggleProductForm() {
+            const form = document.getElementById('product-form-container');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function loadProducts() {
+            if (window.db) {
+                window.db.collection('products').get().then(snapshot => {
+                    const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderProductTable(products);
+                });
+            } else {
+                fetch('/api/products').then(r => r.json()).then(products => {
+                    renderProductTable(products || []);
+                });
+            }
+        }
+
+        function renderProductTable(products) {
+            if (products.length === 0) {
+                document.getElementById('products-table').innerHTML = '<div class="empty-state"><h3>No products found</h3></div>';
+                return;
+            }
+            document.getElementById('products-table').innerHTML = `
+                <table>
+                    <thead><tr>
+                        <th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Actions</th>
+                    </tr></thead>
+                    <tbody>${products.map(p => `
+                        <tr>
+                            <td><img src="${p.image}" class="admin-img-preview" onerror="this.src='https://via.placeholder.com/50'"></td>
+                            <td><strong>${p.name}</strong></td>
+                            <td>${p.category}</td>
+                            <td><strong>${formatPrice(p.price)}</strong></td>
+                            <td>
+                                <button class="admin-btn outline" style="color:var(--red); padding: 5px 10px;" onclick="deleteProduct('${p.id}')">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('')}</tbody>
+                </table>`;
+        }
+
+        function saveProduct() {
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('p-name').value.trim(),
+                category: document.getElementById('p-cat').value,
+                price: parseInt(document.getElementById('p-price').value),
+                image: document.getElementById('p-image').value.trim(),
+                description: document.getElementById('p-desc').value.trim()
+            };
+
+            if (!product.name || !product.price || !product.image) {
+                alert('Please fill in Name, Price, and Image URL');
+                return;
+            }
+
+            if (window.db) {
+                const docId = product.id.toString();
+                window.db.collection('products').doc(docId).set(product).then(() => {
+                    finishSave();
+                });
+            } else {
+                fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(product)
+                }).then(() => {
+                    finishSave();
+                });
+            }
+        }
+
+        function finishSave() {
+            toggleProductForm();
+            loadProducts();
+            // Clear inputs
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            document.getElementById('p-image').value = '';
+            document.getElementById('p-desc').value = '';
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            if (window.db) {
+                window.db.collection('products').doc(id).delete().then(() => loadProducts());
+            } else {
+                fetch(`/api/products/${id}`, { method: 'DELETE' })
+                    .then(() => loadProducts());
+            }
+        }
+
+        function uploadImage(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const btn = input.nextElementSibling;
+            const oldText = btn.innerHTML;
+            btn.innerHTML = '⏳ Processing...';
+            btn.disabled = true;
+
+            fetch('/api/upload', {
+                method: 'POST',
+                headers: { 'X-File-Name': file.name },
+                body: file
+            })
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('p-image').value = data.url;
+                    btn.innerHTML = '✅ Done';
+                    setTimeout(() => {
+                        btn.innerHTML = oldText;
+                        btn.disabled = false;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Upload failed!');
+                    btn.innerHTML = oldText;
+                    btn.disabled = false;
+                });
+        }
+
+        // Auto-refresh every 5 seconds
+        setInterval(loadOrders, 5000);
+        loadOrders();
+    </script>
+</body>
+
+</html>

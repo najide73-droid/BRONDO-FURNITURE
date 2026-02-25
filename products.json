@@ -1,0 +1,110 @@
+[
+    {
+        "id": 1,
+        "name": "Oakwood Sofa Set",
+        "category": "Living Room",
+        "price": 45000,
+        "description": "Elegant 3-seater sofa with premium upholstery",
+        "image": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.9
+    },
+    {
+        "id": 2,
+        "name": "Walnut Coffee Table",
+        "category": "Living Room",
+        "price": 12000,
+        "description": "Handcrafted solid walnut wood coffee table",
+        "image": "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.8
+    },
+    {
+        "id": 3,
+        "name": "Luxury King Bed",
+        "category": "Bedroom",
+        "price": 65000,
+        "description": "King-size bed with tufted headboard",
+        "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.9
+    },
+    {
+        "id": 4,
+        "name": "Teak Dining Table",
+        "category": "Dining",
+        "price": 35000,
+        "description": "6-seater dining table in solid teak wood",
+        "image": "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.7
+    },
+    {
+        "id": 5,
+        "name": "Executive Office Chair",
+        "category": "Office",
+        "price": 18000,
+        "description": "Ergonomic leather office chair with lumbar support",
+        "image": "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.8
+    },
+    {
+        "id": 6,
+        "name": "Velvet Armchair",
+        "category": "Living Room",
+        "price": 22000,
+        "description": "Premium velvet accent chair with gold legs",
+        "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.9
+    },
+    {
+        "id": 7,
+        "name": "Wooden Bookshelf",
+        "category": "Living Room",
+        "price": 15000,
+        "description": "5-tier open bookshelf in sheesham wood",
+        "image": "https://images.unsplash.com/photo-1594620302200-9a762244a156?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.6
+    },
+    {
+        "id": 8,
+        "name": "Bedside Table Set",
+        "category": "Bedroom",
+        "price": 8000,
+        "description": "Set of 2 matching bedside tables with drawers",
+        "image": "https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.7
+    },
+    {
+        "id": 9,
+        "name": "Dining Chairs (Set of 4)",
+        "category": "Dining",
+        "price": 16000,
+        "description": "Upholstered dining chairs with wooden legs",
+        "image": "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.8
+    },
+    {
+        "id": 10,
+        "name": "Standing Desk",
+        "category": "Office",
+        "price": 25000,
+        "description": "Adjustable standing desk with cable management",
+        "image": "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.7
+    },
+    {
+        "id": 11,
+        "name": "Wardrobe 3-Door",
+        "category": "Bedroom",
+        "price": 42000,
+        "description": "Spacious 3-door wardrobe with mirror",
+        "image": "https://images.unsplash.com/photo-1558997519-83ea9252edf8?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.8
+    },
+    {
+        "id": 12,
+        "name": "TV Console Unit",
+        "category": "Living Room",
+        "price": 18000,
+        "description": "Modern TV unit with storage compartments",
+        "image": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800",
+        "rating": 4.6
+    }
+]
