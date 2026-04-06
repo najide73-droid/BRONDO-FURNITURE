@@ -189,6 +189,10 @@ try {
             $resp = "HTTP/1.1 200 OK`r`nAccess-Control-Allow-Origin: *`r`nContent-Type: application/json`r`nContent-Length: $respSize`r`n`r`n$jsonResp"
             $stream.Write([System.Text.Encoding]::UTF8.GetBytes($resp), 0, [System.Text.Encoding]::UTF8.GetByteCount($resp))
         }
+        elseif ($method -eq "OPTIONS") {
+            $resp = "HTTP/1.1 204 No Content`r`nAccess-Control-Allow-Origin: *`r`nAccess-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE`r`nAccess-Control-Allow-Headers: Content-Type, Authorization`r`n`r`n"
+            $stream.Write([System.Text.Encoding]::UTF8.GetBytes($resp), 0, [System.Text.Encoding]::UTF8.GetByteCount($resp))
+        }
         else {
             $path = Join-Path (Get-Location) $url.TrimStart('/')
             if (Test-Path $path -PathType Leaf) {

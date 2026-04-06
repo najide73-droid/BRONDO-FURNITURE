@@ -10,8 +10,8 @@ async function fetchProducts() {
             products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             console.log("Loaded from Firebase:", products.length);
         } else {
-            // Local Fallback
-            const response = await fetch('/api/products');
+            // Local Fallback (Development only)
+            const response = await fetch('http://localhost:8081/api/products');
             products = await response.json();
         }
 
@@ -29,10 +29,10 @@ async function fetchProducts() {
 
 // --- Categories ---
 const categories = [
-    { name: "Living Room", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=600", count: 0 },
-    { name: "Bedroom", image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=600", count: 0 },
-    { name: "Dining", image: "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&q=80&w=600", count: 0 },
-    { name: "Office", image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&q=80&w=600", count: 0 }
+    { name: "Wall Decors", image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=600", count: 0 },
+    { name: "Frames", image: "https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80&w=600", count: 0 },
+    { name: "Statues", image: "https://images.unsplash.com/photo-1601758124277-2850906b3be3?auto=format&fit=crop&q=80&w=600", count: 0 },
+    { name: "Clocks", image: "https://images.unsplash.com/photo-1563861826-1fb1b0a91a9e?auto=format&fit=crop&q=80&w=600", count: 0 }
 ];
 
 // Initial counts (will be updated after fetch)
@@ -101,7 +101,7 @@ function renderProducts(list = products) {
                 <div class="product-footer">
                     <span class="product-price">${formatPrice(p.price)}</span>
                     <button class="add-cart-btn" onclick="addToCart(${p.id})" aria-label="Add to cart">
-                        <ion-icon name="bag-add-outline"></ion-icon>
+                        <ion-icon name="cart-outline"></ion-icon>
                     </button>
                 </div>
             </div>
@@ -161,10 +161,11 @@ function renderCart() {
     if (cart.length === 0) {
         cartItemsEl.innerHTML = `
             <div class="empty-cart">
-                <ion-icon name="bag-outline"></ion-icon>
+                <ion-icon name="cart-outline"></ion-icon>
                 <p>Your cart is empty</p>
-                <button onclick="toggleCart(); showShop();" class="btn-gold-sm">Start Shopping</button>
+                <button onclick="toggleCart(); showShop();" class="btn btn-gold-sm">Start Shopping</button>
             </div>`;
+        document.querySelector('.cart-footer').style.display = 'none';
     } else {
         cartItemsEl.innerHTML = `<div>${cart.map(item => `
             <div class="cart-item-row">
@@ -180,6 +181,7 @@ function renderCart() {
                 </div>
             </div>
         `).join('')}</div>`;
+        document.querySelector('.cart-footer').style.display = 'block';
     }
     const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
     cartTotalEl.textContent = formatPrice(total);
@@ -235,12 +237,57 @@ function openCheckout() {
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div>
                     <label>City *</label>
-                    <input type="text" id="co-city" placeholder="Your city">
+                    <input type="text" id="co-city" list="city-options" placeholder="Your city" autocomplete="off">
+                    <datalist id="city-options">
+                        <option value="Tirurkad"></option>
+                        <option value="Mankada"></option>
+                        <option value="Perinthalmanna"></option>
+                        <option value="Malappuram"></option>
+                        <option value="Manjeri"></option>
+                        <option value="Kottakkal"></option>
+                    </datalist>
                 </div>
                 <div>
-                    <label>District / State *</label>
-                    <input type="text" id="co-state" placeholder="State">
-                </div>
+                    <label>State *</label>
+                    <select id="co-state" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: var(--font);">
+                    <option value="" disabled selected>Select your state</option>
+                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Ladakh">Ladakh</option>
+                    <option value="Lakshadweep">Lakshadweep</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Puducherry">Puducherry</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                </select>
             </div>
             <div>
                 <label>Payment Method *</label>
@@ -271,7 +318,7 @@ function placeOrder() {
     const landmark = document.getElementById('co-landmark').value.trim();
     const pincode = document.getElementById('co-pincode').value.trim();
     const city = document.getElementById('co-city').value.trim();
-    const state = document.getElementById('co-state').value.trim();
+    const state = document.getElementById('co-state').value;
     const pay = document.querySelector('input[name="pay"]:checked').value;
 
     if (!name) { alert('Please enter your name'); return; }
@@ -279,7 +326,7 @@ function placeOrder() {
     if (!address) { alert('Please enter street address'); return; }
     if (!pincode || pincode.length < 6) { alert('Please enter 6-digit pin code'); return; }
     if (!city) { alert('Please enter your city'); return; }
-    if (!state) { alert('Please enter your state'); return; }
+    if (!state) { alert('Please select your state'); return; }
 
     const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
     const order = {
@@ -297,7 +344,7 @@ function placeOrder() {
             .then(() => console.log("Order synced to Cloud"))
             .catch(err => console.error("Cloud sync failed:", err));
     } else {
-        fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) })
+        fetch('http://localhost:8081/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) })
             .catch(err => console.error('Sync failed:', err));
     }
 

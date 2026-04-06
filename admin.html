@@ -543,10 +543,10 @@
                         <div>
                             <label>Category</label>
                             <select id="p-cat">
-                                <option value="Living Room">Living Room</option>
-                                <option value="Bedroom">Bedroom</option>
-                                <option value="Dining">Dining</option>
-                                <option value="Office">Office</option>
+                                <option value="Wall Decors">Wall Decors</option>
+                                <option value="Frames">Frames</option>
+                                <option value="Statues">Statues</option>
+                                <option value="Clocks">Clocks</option>
                             </select>
                         </div>
                         <div>
@@ -611,7 +611,9 @@
 
         function verifyLogin() {
             const pass = document.getElementById('admin-pass').value;
-            if (pass === 'admin123') {
+            // IMPORTANT: In a real production app, we would use Firebase Auth.
+            // For now, let's keep it simple but change the default password.
+            if (pass === 'Brando73#Furniture') {
                 sessionStorage.setItem('brando_admin', 'true');
                 document.getElementById('login-overlay').style.display = 'none';
             } else {
@@ -649,7 +651,7 @@
                     processOrders(serverOrders);
                 });
             } else {
-                fetch('/api/orders').then(r => r.json()).then(serverOrders => {
+                fetch('http://localhost:8081/api/orders').then(r => r.json()).then(serverOrders => {
                     processOrders(serverOrders);
                 }).catch(() => {
                     let orders = JSON.parse(localStorage.getItem('brando_orders') || '[]');
@@ -705,7 +707,7 @@
                                 <div style="font-size:0.7rem; color:var(--text-light); border-top: 1px solid #eee; margin-top: 5px; padding-top: 5px;">
                                     ${o.customer?.address || ''}<br>
                                     ${o.customer?.landmark ? `Landmark: ${o.customer.landmark}<br>` : ''}
-                                    ${o.customer?.city || ''}, ${o.customer?.state || ''} - ${o.customer?.pincode || ''}
+                                    ${o.customer?.city ? o.customer.city + ', ' : ''}${o.customer?.state || ''} - ${o.customer?.pincode || ''}
                                 </div>
                             </td>
                             <td class="order-items-list">
@@ -730,7 +732,7 @@
             if (window.db) {
                 window.db.collection('orders').doc(id).update({ status }).then(() => loadOrders());
             } else {
-                fetch(`/api/orders/${id}`, {
+                fetch(`http://localhost:8081/api/orders/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
@@ -751,7 +753,7 @@
                     renderProductTable(products);
                 });
             } else {
-                fetch('/api/products').then(r => r.json()).then(products => {
+                fetch('http://localhost:8081/api/products').then(r => r.json()).then(products => {
                     renderProductTable(products || []);
                 });
             }
@@ -802,7 +804,7 @@
                     finishSave();
                 });
             } else {
-                fetch('/api/products', {
+                fetch('http://localhost:8081/api/products', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(product)
@@ -827,7 +829,7 @@
             if (window.db) {
                 window.db.collection('products').doc(id).delete().then(() => loadProducts());
             } else {
-                fetch(`/api/products/${id}`, { method: 'DELETE' })
+                fetch(`http://localhost:8081/api/products/${id}`, { method: 'DELETE' })
                     .then(() => loadProducts());
             }
         }
@@ -840,7 +842,7 @@
             btn.innerHTML = '⏳ Processing...';
             btn.disabled = true;
 
-            fetch('/api/upload', {
+            fetch('http://localhost:8081/api/upload', {
                 method: 'POST',
                 headers: { 'X-File-Name': file.name },
                 body: file
@@ -866,6 +868,8 @@
         setInterval(loadOrders, 5000);
         loadOrders();
     </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>
