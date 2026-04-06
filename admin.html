@@ -612,8 +612,8 @@
         function verifyLogin() {
             const pass = document.getElementById('admin-pass').value;
             // IMPORTANT: In a real production app, we would use Firebase Auth.
-            // For now, let's keep it simple but change the default password.
-            if (pass === 'Brando73#Furniture') {
+            // For now, let's keep it simple at your request.
+            if (pass === 'admin@123') {
                 sessionStorage.setItem('brando_admin', 'true');
                 document.getElementById('login-overlay').style.display = 'none';
             } else {
