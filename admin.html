@@ -282,6 +282,11 @@
             color: #166534;
         }
 
+        .status-payment-successful {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
         .status-cancelled {
             background: #fee2e2;
             color: #991b1b;
@@ -419,11 +424,12 @@
         }
 
         .admin-img-preview {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
             border-radius: 6px;
-            background: #eee;
+            background: #f8f8f8;
+            padding: 2px;
         }
 
         /* Responsive */
@@ -452,6 +458,13 @@
             .product-form .full-width {
                 grid-column: span 1;
             }
+        @keyframes slideIn {
+            from { transform: translateX(100%) scale(0.8); opacity: 0; }
+            to { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0) scale(1); opacity: 1; }
+            to { transform: translateX(100%) scale(0.8); opacity: 0; }
         }
     </style>
 </head>
@@ -477,8 +490,6 @@
             </div>
         </div>
         <div class="admin-actions">
-            <a href="index.html" class="admin-btn outline">← Visit Store</a>
-            <button class="admin-btn gold" onclick="loadOrders()">↻ Refresh</button>
         </div>
     </header>
 
@@ -509,6 +520,8 @@
             <button class="tab active" onclick="switchTab(event, 'orders')">📦 Orders</button>
             <button class="tab" onclick="switchTab(event, 'all-orders')">📋 All Orders</button>
             <button class="tab" onclick="switchTab(event, 'products')">🪑 Products</button>
+            <button class="tab" onclick="switchTab(event, 'categories')">📁 Categories</button>
+            <button class="tab" onclick="switchTab(event, 'history')">📜 History</button>
         </div>
 
         <!-- Orders Panel -->
@@ -556,14 +569,20 @@
                         <div>
                             <label>Product Image</label>
                             <div style="display: flex; gap: 8px; align-items: center;">
-                                <input type="text" id="p-image" placeholder="Image URL or upload ->" style="flex: 1;">
+                                <input type="text" id="p-image" placeholder="Image URL or upload ->" style="flex: 1;" oninput="updateProductPreview()">
                                 <input type="file" id="p-file" accept="image/*" style="display: none;"
-                                    onchange="uploadImage(this)">
+                                    onchange="uploadImage(this, 'p-image', updateProductPreview)">
                                 <button class="admin-btn outline"
                                     style="color:var(--text); padding: 8px; border-color: #ddd; background: #fff;"
                                     onclick="document.getElementById('p-file').click()">
                                     📷 Choose Photo
                                 </button>
+                            </div>
+                            <div id="product-preview-container" style="margin-top: 10px; display: none;">
+                                <img id="product-preview-img" src="" style="width: 100px; height: 100px; object-fit: contain; border-radius: 10px; border: 1px solid #ddd; background: #f8f8f8; padding: 4px;">
+                                <p id="product-url-warning" style="color: var(--orange); font-size: 0.75rem; margin-top: 5px; display: none;">
+                                    ⚠️ This looks like a search page URL. I've tried to fix it, but a direct link is best.
+                                </p>
                             </div>
                         </div>
                         <div class="full-width">
@@ -571,7 +590,8 @@
                             <textarea id="p-desc" rows="2" placeholder="Describe the item..."></textarea>
                         </div>
                         <div class="full-width" style="flex-direction: row; gap: 10px;">
-                            <button class="admin-btn gold" onclick="saveProduct()">Save Product</button>
+                            <input type="hidden" id="p-id">
+                            <button class="admin-btn gold" id="save-product-btn" onclick="saveProduct()">Save Product</button>
                             <button class="admin-btn outline" style="color:var(--text)"
                                 onclick="toggleProductForm()">Cancel</button>
                         </div>
@@ -580,6 +600,71 @@
 
                 <div id="products-table">
                     <!-- Products rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Panel -->
+        <div id="categories-panel" class="panel">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Manage Categories</h2>
+                    <button class="admin-btn gold" onclick="toggleCategoryForm()">+ Add New Category</button>
+                </div>
+
+                <div id="category-form-container" style="display: none; border-bottom: 1px solid #eee;">
+                    <div class="product-form">
+                        <div>
+                            <label>Category Name</label>
+                            <input type="text" id="cat-name" placeholder="e.g. Chairs">
+                        </div>
+                        <div>
+                            <label>Category Image</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="text" id="cat-image" placeholder="Image URL or upload ->" style="flex: 1;" oninput="updateCatPreview()">
+                                <input type="file" id="cat-file" accept="image/*" style="display: none;"
+                                    onchange="uploadImage(this, 'cat-image', updateCatPreview)">
+                                <button class="admin-btn outline"
+                                    style="color:var(--text); padding: 8px; border-color: #ddd; background: #fff;"
+                                    onclick="document.getElementById('cat-file').click()">
+                                    📷 Choose Photo
+                                </button>
+                            </div>
+                            <div id="cat-preview-container" style="margin-top: 10px; display: none;">
+                                <img id="cat-preview-img" src="" style="width: 100px; height: 100px; object-fit: contain; border-radius: 10px; border: 1px solid #ddd; background: #f8f8f8; padding: 4px;">
+                                <p id="cat-url-warning" style="color: var(--orange); font-size: 0.75rem; margin-top: 5px; display: none;">
+                                    ⚠️ This looks like a search page URL, not a direct image link. Use a direct link (ending in .jpg, .png, etc.)
+                                </p>
+                            </div>
+                        </div>
+                        <div class="full-width" style="flex-direction: row; gap: 10px;">
+                            <input type="hidden" id="cat-old-name">
+                            <button class="admin-btn gold" id="save-cat-btn" onclick="saveCategory()">Save Category</button>
+                            <button class="admin-btn outline" style="color:var(--text)" onclick="toggleCategoryForm()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="categories-table">
+                    <!-- Categories rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- History Panel -->
+        <div id="history-panel" class="panel">
+            <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h2>Order History (Archived)</h2>
+                        <p style="font-size: 0.8rem; color: var(--text-light);">Orders deleted from the main list are saved here.</p>
+                    </div>
+                    <button class="admin-btn outline" style="color:var(--red); border-color:var(--red); padding: 8px 16px; font-weight: 600; font-size: 0.85rem;" onclick="clearAllHistory()">🗑 Clear All History</button>
+                </div>
+                <div id="history-table">
+                    <div class="empty-state">
+                        <h3>No history yet</h3>
+                    </div>
                 </div>
             </div>
         </div>
@@ -641,7 +726,34 @@
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById(tab + '-panel').classList.add('active');
-            if (tab === 'products') loadProducts();
+            if (tab === 'products') {
+                loadCategories();
+                loadProducts();
+            }
+            if (tab === 'categories') loadCategories();
+            if (tab === 'history') loadHistory();
+        }
+
+        function loadHistory() {
+            fetch(`/api/order-history?t=${Date.now()}`)
+                .then(r => r.json())
+                .then(history => {
+                    renderOrderTable('history-table', history, true);
+                });
+        }
+
+        function clearAllHistory() {
+            if (!confirm('Are you sure you want to permanently delete all archived orders? This cannot be undone.')) return;
+            fetch('/api/order-history', { method: 'DELETE' })
+                .then(r => {
+                    if (r.ok) {
+                        alert('Order history cleared successfully!');
+                        loadHistory();
+                    } else {
+                        alert('Failed to clear order history.');
+                    }
+                })
+                .catch(err => alert('Error clearing history: ' + err));
         }
 
         function loadOrders() {
@@ -651,9 +763,10 @@
                     processOrders(serverOrders);
                 });
             } else {
-                fetch('http://localhost:8081/api/orders').then(r => r.json()).then(serverOrders => {
+                fetch(`/api/orders?t=${Date.now()}`).then(r => r.json()).then(serverOrders => {
                     processOrders(serverOrders);
-                }).catch(() => {
+                }).catch((err) => {
+                    console.error('Order load failed:', err);
                     let orders = JSON.parse(localStorage.getItem('brando_orders') || '[]');
                     renderOrders(orders);
                 });
@@ -666,7 +779,7 @@
             if (orders.length > 0) {
                 const latestOrder = orders[0];
                 if (lastId && latestOrder.id !== lastId) {
-                    alert("🎉 New Order Received!\nOrder ID: " + latestOrder.id + "\nCustomer: " + latestOrder.customer.name);
+                    showNewOrderNotification(latestOrder);
                 }
                 localStorage.setItem('brando_last_order_id', latestOrder.id);
             }
@@ -678,17 +791,52 @@
             // Stats
             document.getElementById('stat-orders').textContent = orders.length;
             document.getElementById('stat-revenue').textContent = formatPrice(orders.reduce((s, o) => s + (o.total || 0), 0));
-            document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'Pending').length;
+            document.getElementById('stat-pending').textContent = orders.filter(o => o.status === 'Pending' || o.status === 'Payment Successful').length;
             document.getElementById('stat-delivered').textContent = orders.filter(o => o.status === 'Delivered').length;
 
             if (orders.length === 0) return;
 
-            const pendingOrders = orders.filter(o => o.status === 'Pending' || o.status === 'Confirmed');
+            const pendingOrders = orders.filter(o => o.status === 'Pending' || o.status === 'Payment Successful' || o.status === 'Confirmed');
             renderOrderTable('orders-table', pendingOrders.length ? pendingOrders : orders.slice(0, 10));
             renderOrderTable('all-orders-table', orders);
         }
 
-        function renderOrderTable(containerId, orders) {
+        function showNewOrderNotification(order) {
+            // Play sound
+            try {
+                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                audio.play();
+            } catch(e) {}
+
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; top: 20px; right: 20px; 
+                background: var(--gold); color: white; 
+                padding: 20px; border-radius: 15px; 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 9999; display: flex; align-items: center; gap: 15px;
+                animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+                cursor: pointer;
+            `;
+            toast.innerHTML = `
+                <div style="font-size: 2rem;">📦</div>
+                <div>
+                    <strong style="display:block; font-size: 1.1rem;">New Order Received!</strong>
+                    <span style="font-size: 0.9rem;">From ${order.customer.name} - ${formatPrice(order.total)}</span>
+                </div>
+            `;
+            toast.onclick = () => {
+                toast.remove();
+                switchTab({target: document.querySelector('.sidebar-item:nth-child(2)')}, 'orders');
+            };
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.5s forwards';
+                setTimeout(() => toast.remove(), 500);
+            }, 8000);
+        }
+
+        function renderOrderTable(containerId, orders, isHistory = false) {
             if (orders.length === 0) {
                 document.getElementById(containerId).innerHTML = '<div class="empty-state"><h3>No orders</h3></div>';
                 return;
@@ -696,7 +844,7 @@
             document.getElementById(containerId).innerHTML = `
                 <table>
                     <thead><tr>
-                        <th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th>
+                        <th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Action</th>
                     </tr></thead>
                     <tbody>${orders.map(o => `
                         <tr>
@@ -717,12 +865,18 @@
                             <td>${o.paymentMethod || 'COD'}</td>
                             <td>
                                 <select class="status-select" onchange="updateStatus('${o.id}', this.value)">
-                                    ${['Pending', 'Confirmed', 'Delivered', 'Cancelled'].map(s =>
+                                    ${['Pending', 'Payment Successful', 'Confirmed', 'Delivered', 'Cancelled'].map(s =>
                 `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s}</option>`
             ).join('')}
                                 </select>
                             </td>
                             <td style="font-size:0.75rem;color:var(--text-light)">${o.date || ''}</td>
+                            <td>
+                                ${isHistory ? 
+                                    '<span style="color:var(--text-light); font-size: 0.7rem;">Archived</span>' : 
+                                    `<button class="admin-btn outline" style="color:var(--red); padding: 5px 10px; font-size: 0.7rem;" onclick="deleteOrder('${o.id}')">Delete</button>`
+                                }
+                            </td>
                         </tr>
                     `).join('')}</tbody>
                 </table>`;
@@ -732,11 +886,27 @@
             if (window.db) {
                 window.db.collection('orders').doc(id).update({ status }).then(() => loadOrders());
             } else {
-                fetch(`http://localhost:8081/api/orders/${id}`, {
+                fetch(`/api/orders/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
                 }).then(() => loadOrders());
+            }
+        }
+
+        function deleteOrder(id) {
+            if (!confirm(`Are you sure you want to delete order ${id}?`)) return;
+            if (window.db) {
+                window.db.collection('orders').doc(id).delete().then(() => loadOrders());
+            } else {
+                fetch(`/api/orders/${id}?t=${Date.now()}`, { method: 'DELETE' })
+                    .then(r => {
+                        if (r.ok) {
+                            loadOrders();
+                        } else {
+                            alert('Delete failed');
+                        }
+                    });
             }
         }
 
@@ -753,9 +923,9 @@
                     renderProductTable(products);
                 });
             } else {
-                fetch('http://localhost:8081/api/products').then(r => r.json()).then(products => {
+                fetch(`/api/products?t=${Date.now()}`).then(r => r.json()).then(products => {
                     renderProductTable(products || []);
-                });
+                }).catch(err => alert('Failed to load products: ' + err));
             }
         }
 
@@ -776,16 +946,60 @@
                             <td>${p.category}</td>
                             <td><strong>${formatPrice(p.price)}</strong></td>
                             <td>
-                                <button class="admin-btn outline" style="color:var(--red); padding: 5px 10px;" onclick="deleteProduct('${p.id}')">Delete</button>
+                                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                    <button class="admin-btn outline" style="color:var(--blue); padding: 4px 8px; font-size: 0.7rem;" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
+                                    <input type="file" id="change-img-${p.id}" accept="image/*" style="display: none;" onchange="changeProductImage('${p.id}', this)">
+                                    <button class="admin-btn outline" style="color:var(--text); padding: 4px 8px; font-size: 0.7rem;" onclick="document.getElementById('change-img-${p.id}').click()" id="btn-img-${p.id}">📷 Upload</button>
+                                    <button class="admin-btn outline" style="color:var(--text); padding: 4px 8px; font-size: 0.7rem;" onclick="updateProductImageFromURL('${p.id}')">🔗 URL</button>
+                                    <button class="admin-btn outline" style="color:var(--red); padding: 4px 8px; font-size: 0.7rem;" onclick="deleteProduct('${p.id}')">Delete</button>
+                                </div>
                             </td>
                         </tr>
                     `).join('')}</tbody>
                 </table>`;
         }
 
+        function editProduct(p) {
+            document.getElementById('p-id').value = p.id;
+            document.getElementById('p-name').value = p.name;
+            document.getElementById('p-cat').value = p.category;
+            document.getElementById('p-price').value = p.price;
+            document.getElementById('p-image').value = p.image;
+            document.getElementById('p-desc').value = p.description || '';
+            document.getElementById('save-product-btn').textContent = 'Update Product';
+            document.getElementById('product-form-container').style.display = 'block';
+            window.scrollTo({ top: document.getElementById('product-form-container').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function updateProductPreview() {
+            let url = document.getElementById('p-image').value.trim();
+            const preview = document.getElementById('product-preview-container');
+            const img = document.getElementById('product-preview-img');
+            const warning = document.getElementById('product-url-warning');
+            
+            if (url) {
+                // Try to extract direct image link from Google Search URLs
+                if (url.includes('google.com/imgres')) {
+                    const match = url.match(/imgurl=([^&]+)/);
+                    if (match && match[1]) {
+                        url = decodeURIComponent(match[1]);
+                        document.getElementById('p-image').value = url;
+                    }
+                }
+
+                preview.style.display = 'block';
+                img.src = url;
+                warning.style.display = (url.includes('google.com/imgres') || url.includes('search')) ? 'block' : 'none';
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
         function saveProduct() {
+            console.log('Attempting to save product...');
+            const id = document.getElementById('p-id').value;
             const product = {
-                id: Date.now(),
+                id: id ? id : Date.now().toString(),
                 name: document.getElementById('p-name').value.trim(),
                 category: document.getElementById('p-cat').value,
                 price: parseInt(document.getElementById('p-price').value),
@@ -799,12 +1013,11 @@
             }
 
             if (window.db) {
-                const docId = product.id.toString();
-                window.db.collection('products').doc(docId).set(product).then(() => {
+                window.db.collection('products').doc(product.id).set(product).then(() => {
                     finishSave();
                 });
             } else {
-                fetch('http://localhost:8081/api/products', {
+                fetch('/api/products', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(product)
@@ -815,6 +1028,8 @@
         }
 
         function finishSave() {
+            document.getElementById('p-id').value = '';
+            document.getElementById('save-product-btn').textContent = 'Save Product';
             toggleProductForm();
             loadProducts();
             // Clear inputs
@@ -825,16 +1040,24 @@
         }
 
         function deleteProduct(id) {
+            console.log('Deleting product:', id);
             if (!confirm('Are you sure you want to delete this product?')) return;
             if (window.db) {
                 window.db.collection('products').doc(id).delete().then(() => loadProducts());
             } else {
-                fetch(`http://localhost:8081/api/products/${id}`, { method: 'DELETE' })
-                    .then(() => loadProducts());
+                fetch(`/api/products/${id}?t=${Date.now()}`, { method: 'DELETE' })
+                    .then(r => {
+                        if (r.ok) {
+                            console.log('Product deleted successfully');
+                            loadProducts();
+                        } else {
+                            alert('Delete failed');
+                        }
+                    });
             }
         }
 
-        function uploadImage(input) {
+        function uploadImage(input, targetId, callback) {
             if (!input.files || !input.files[0]) return;
             const file = input.files[0];
             const btn = input.nextElementSibling;
@@ -842,15 +1065,16 @@
             btn.innerHTML = '⏳ Processing...';
             btn.disabled = true;
 
-            fetch('http://localhost:8081/api/upload', {
+            fetch('/api/upload', {
                 method: 'POST',
                 headers: { 'X-File-Name': file.name },
                 body: file
             })
                 .then(r => r.json())
                 .then(data => {
-                    document.getElementById('p-image').value = data.url;
+                    document.getElementById(targetId).value = data.url;
                     btn.innerHTML = '✅ Done';
+                    if (callback) callback();
                     setTimeout(() => {
                         btn.innerHTML = oldText;
                         btn.disabled = false;
@@ -864,9 +1088,235 @@
                 });
         }
 
+        function changeProductImage(id, input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const btn = document.getElementById('btn-img-' + id);
+            const oldText = btn.innerHTML;
+            btn.innerHTML = '⏳ Uploading...';
+            btn.disabled = true;
+
+            fetch('/api/upload', {
+                method: 'POST',
+                headers: { 'X-File-Name': file.name },
+                body: file
+            })
+            .then(r => r.json())
+            .then(data => {
+                const newImageUrl = data.url;
+                if (window.db) {
+                    window.db.collection('products').doc(id.toString()).update({ image: newImageUrl }).then(() => {
+                        loadProducts(); 
+                        btn.innerHTML = '✅ Done';
+                    });
+                } else {
+                    fetch('/api/products/' + id, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: newImageUrl })
+                    }).then(() => {
+                        loadProducts(); 
+                        btn.innerHTML = '✅ Done';
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Upload or update failed!');
+                btn.innerHTML = oldText;
+                btn.disabled = false;
+            });
+        }
+
+        function updateProductImageFromURL(id) {
+            const newImageUrl = prompt("Enter the new Image URL:");
+            if (!newImageUrl) return; // cancelled or empty
+
+            if (window.db) {
+                window.db.collection('products').doc(id.toString()).update({ image: newImageUrl }).then(() => {
+                    loadProducts(); 
+                }).catch(err => alert("Update failed!"));
+            } else {
+                fetch('/api/products/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: newImageUrl })
+                }).then(() => {
+                    loadProducts(); 
+                }).catch(err => alert("Update failed!"));
+            }
+        }
+
+        // --- Category Management ---
+        function toggleCategoryForm() {
+            const form = document.getElementById('category-form-container');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function loadCategories() {
+            if (window.db) {
+                window.db.collection('categories').get().then(snapshot => {
+                    const cats = snapshot.docs.map(doc => doc.data());
+                    renderCategoryTable(cats || []);
+                    updateCategoryDropdown(cats || []);
+                });
+            } else {
+                fetch(`/api/categories?t=${Date.now()}`)
+                    .then(r => r.json())
+                    .then(cats => {
+                        renderCategoryTable(cats || []);
+                        updateCategoryDropdown(cats || []);
+                    })
+                    .catch(err => console.error('Failed to load categories:', err));
+            }
+        }
+
+        function renderCategoryTable(cats) {
+            if (cats.length === 0) {
+                document.getElementById('categories-table').innerHTML = '<div class="empty-state"><h3>No categories found</h3></div>';
+                return;
+            }
+            document.getElementById('categories-table').innerHTML = `
+                <table>
+                    <thead><tr><th>Preview</th><th>Name</th><th>Image URL</th><th>Actions</th></tr></thead>
+                    <tbody>${cats.map(c => `
+                        <tr>
+                            <td><img src="${c.image}" class="admin-img-preview" onerror="this.src='https://via.placeholder.com/50'"></td>
+                            <td><strong>${c.name}</strong></td>
+                            <td style="font-size:0.75rem; color:var(--text-light); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${c.image || 'No image'}</td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="admin-btn outline" style="color:var(--blue); padding: 5px 10px;" onclick='editCategory(${JSON.stringify(c)})'>Edit</button>
+                                    <button class="admin-btn outline" style="color:var(--red); padding: 5px 10px;" onclick="deleteCategory('${c.name.replace(/'/g, "\\'")}')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('')}</tbody>
+                </table>`;
+        }
+
+        function deleteCategory(name) {
+            if (!confirm(`Are you sure you want to delete the category "${name}"?`)) return;
+            
+            if (window.db) {
+                // In Firebase, we might need a doc ID. If name is used as ID:
+                window.db.collection('categories').doc(name).delete().then(() => loadCategories())
+                .catch(() => {
+                    // If name wasn't the ID, we search and delete
+                    window.db.collection('categories').where('name', '==', name).get().then(s => {
+                        s.forEach(doc => doc.ref.delete());
+                        loadCategories();
+                    });
+                });
+            } else {
+                fetch(`/api/categories/${encodeURIComponent(name)}`, { method: 'DELETE' })
+                    .then(async r => {
+                        if (r.ok) {
+                            loadCategories();
+                        } else {
+                            const err = await r.text();
+                            alert('Delete failed: ' + err);
+                        }
+                    })
+                    .catch(err => alert('Network error during delete: ' + err));
+            }
+        }
+
+        function updateCategoryDropdown(cats) {
+            const select = document.getElementById('p-cat');
+            const current = select.value;
+            select.innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            if (current) select.value = current;
+        }
+
+        function editCategory(c) {
+            document.getElementById('cat-old-name').value = c.name;
+            document.getElementById('cat-name').value = c.name;
+            document.getElementById('cat-image').value = c.image;
+            document.getElementById('save-cat-btn').textContent = 'Update Category';
+            document.getElementById('category-form-container').style.display = 'block';
+            updateCatPreview();
+            window.scrollTo({ top: document.getElementById('category-form-container').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function updateCatPreview() {
+            let url = document.getElementById('cat-image').value.trim();
+            const preview = document.getElementById('cat-preview-container');
+            const img = document.getElementById('cat-preview-img');
+            const warning = document.getElementById('cat-url-warning');
+            
+            if (url) {
+                // Try to extract direct image link from Google Search URLs
+                if (url.includes('google.com/imgres')) {
+                    const match = url.match(/imgurl=([^&]+)/);
+                    if (match && match[1]) {
+                        url = decodeURIComponent(match[1]);
+                        document.getElementById('cat-image').value = url; // Auto-fix the URL in the input
+                    }
+                }
+
+                preview.style.display = 'block';
+                img.src = url;
+                warning.style.display = (url.includes('google.com/imgres') || url.includes('search')) ? 'block' : 'none';
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        function saveCategory() {
+            const oldName = document.getElementById('cat-old-name').value;
+            const name = document.getElementById('cat-name').value.trim();
+            const image = document.getElementById('cat-image').value.trim();
+            if (!name) { alert('Please enter Category Name'); return; }
+
+            const cat = { name, image };
+
+            if (window.db) {
+                // If name changed, delete old one
+                if (oldName && oldName !== name) {
+                    window.db.collection('categories').doc(oldName).delete();
+                }
+                window.db.collection('categories').doc(name).set(cat).then(() => {
+                    finishSaveCat();
+                });
+            } else {
+                // For local, if editing, the server will replace based on name or we need to handle it.
+                // Our server logic for POST adds or replaces if logic is simple.
+                // Let's improve the server to handle this better or just DELETE then POST.
+                if (oldName && oldName !== name) {
+                    fetch(`/api/categories/${encodeURIComponent(oldName)}`, { method: 'DELETE' }).then(() => {
+                        postCategory(cat);
+                    });
+                } else {
+                    postCategory(cat);
+                }
+            }
+        }
+
+        function postCategory(cat) {
+            fetch('/api/categories', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cat)
+            }).then(() => {
+                finishSaveCat();
+            });
+        }
+
+        function finishSaveCat() {
+            document.getElementById('cat-old-name').value = '';
+            document.getElementById('save-cat-btn').textContent = 'Save Category';
+            document.getElementById('cat-name').value = '';
+            document.getElementById('cat-image').value = '';
+            document.getElementById('cat-preview-container').style.display = 'none';
+            toggleCategoryForm();
+            loadCategories();
+        }
+
         // Auto-refresh every 5 seconds
         setInterval(loadOrders, 5000);
         loadOrders();
+        loadCategories(); // Initial load for dropdowns
     </script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

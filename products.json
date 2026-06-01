@@ -1,10 +1,26 @@
 [
-  {
-    "id": 1672521111111,
-    "name": "Geometric Harmony Wall Art",
-    "category": "Wall Decors",
-    "price": 8500,
-    "description": "A sophisticated geometric wall installation featuring teal and gold metallic discs. Perfect for modern living spaces.",
-    "image": "images/products/wall_decor_1.jpg"
-  }
+    {
+        "id":  "1672521111111",
+        "name":  "Geometric Harmony Wall Art",
+        "category":  "Wall Decors",
+        "price":  8500,
+        "image":  "https://artezans.in/cdn/shop/files/PAC001_1_fe62771a-e925-4f89-9324-aaf5e6365fa1.jpg?v=1756237304\u0026width=1024",
+        "description":  "A sophisticated geometric wall installation featuring teal and gold metallic discs. Perfect for modern living spaces."
+    },
+    {
+        "id":  "1778840122119",
+        "name":  "Table",
+        "category":  "Frames",
+        "price":  4444,
+        "image":  "https://www.hometown.in/cdn/shop/files/T_4s_1_c536657b-9833-41b8-bc02-d9443d9dad44.png?v=1764803454\u0026width=1946",
+        "description":  ""
+    },
+    {
+        "id":  "1779724865580",
+        "name":  "Ceramic flower vase.",
+        "category":  "Premium Ceramic Decor",
+        "price":  1500,
+        "image":  "images/products/1000165835.jpg",
+        "description":  "An elegant ceramic pot with a glossy white finish, decorated with gold wave patterns and stylish curved handles for a luxurious look."
+    }
 ]

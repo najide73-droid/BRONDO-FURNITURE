@@ -114,7 +114,7 @@
                             alt="Craftsman at work">
                     </div>
                     <div class="about-badge">
-                        <span class="badge-number">25+</span>
+                        <span class="badge-number">4+</span>
                         <span class="badge-text">Years of<br>Excellence</span>
                     </div>
                 </div>
@@ -122,14 +122,10 @@
                     <p class="section-tag">Our Story</p>
                     <h2 class="section-title left">About Brando Furniture</h2>
                     <p class="about-text">
-                        Brando Furniture was born from a father's passion for woodworking and a family's dedication to
-                        creating beautiful, lasting furniture. What started as a small workshop has grown into a trusted
-                        name in premium furniture — but our values remain the same.
+                        Brando Furniture is built on a passion for quality and a commitment to elegance. In just 4 years, we have grown from a small family initiative into a trusted local destination for premium furniture, driven by the amazing feedback from our customers.
                     </p>
                     <p class="about-text">
-                        Every piece that leaves our shop carries the warmth of handcraftsmanship and the promise of
-                        quality. We don't just sell furniture — we create heirlooms that your family will cherish for
-                        generations.
+                        We are proud that our customers describe us as an "excellent shop" with high-quality products. Every piece of furniture we sell is a promise of quality, craftsmanship, and a touch of handcrafted love.
                     </p>
                     <div class="about-values">
                         <div class="about-value">
@@ -149,8 +145,8 @@
                         <div class="about-value">
                             <ion-icon name="people-outline"></ion-icon>
                             <div>
-                                <h4>Family Legacy</h4>
-                                <p>Trusted by families for over 25 years</p>
+                                <h4>Customer Favorite</h4>
+                                <p>Highly recommended for quality and service</p>
                             </div>
                         </div>
                         <div class="about-value">
@@ -234,29 +230,29 @@
                         <ion-icon name="call-outline"></ion-icon>
                         <div>
                             <h4>Call Us</h4>
-                            <p>+91 XXXXX XXXXX</p>
+                            <p>+91 98462 63118<br>+91 90741 00518</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <ion-icon name="time-outline"></ion-icon>
                         <div>
                             <h4>Showroom Hours</h4>
-                            <p>Mon – Sat: 9 AM – 8 PM<br>Sunday: 10 AM – 6 PM</p>
+                            <p>Mon – Sun: 9 AM – 9 PM<br>(Open All Week)</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <ion-icon name="logo-whatsapp"></ion-icon>
                         <div>
                             <h4>WhatsApp</h4>
-                            <p>+91 XXXXX XXXXX</p>
+                            <p>+91 90741 00518</p>
                         </div>
                     </div>
                 </div>
                 <div class="map-wrapper fade-up delay-1">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3413.456!2d76.24483!3d10.96885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDU4JzA3LjkiTiA3NsKwMTQnNDEuNCJF!5e0!3m2!1sen!2sin!4v1710000000000"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.6990736828343!2d76.18399167509169!3d10.986071489175748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7cdaf08be36eb%3A0xae600bffde1e7191!2sBrando%20Furniture!5e0!3m2!1sen!2sin!4v1778913165368!5m2!1sen!2sin"
                         width="100%" height="100%" style="border:0;border-radius:20px;" allowfullscreen=""
-                        loading="lazy"></iframe>
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>
@@ -269,19 +265,103 @@
             <h3>Your Cart</h3>
             <button onclick="toggleCart()" class="close-cart"><ion-icon name="close-outline"></ion-icon></button>
         </div>
-        <div class="cart-items" id="cart-items">
-            <div class="empty-cart">
-                <ion-icon name="bag-outline"></ion-icon>
-                <p>Your cart is empty</p>
-                <button onclick="toggleCart(); showShop();" class="btn btn-gold-sm">Start Shopping</button>
+        <div class="cart-scroll-area">
+            <div class="cart-items" id="cart-items">
+                <div class="empty-cart">
+                    <ion-icon name="bag-outline"></ion-icon>
+                    <p>Your cart is empty</p>
+                    <button onclick="toggleCart(); showShop();" class="btn btn-gold-sm">Start Shopping</button>
+                </div>
+            </div>
+
+            <!-- Checkout Form (Directly inside Cart) -->
+            <div id="checkout-form" class="checkout-form hidden" style="padding: 20px; border-top: 1px solid #eee;">
+                <h3 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:15px">Delivery Details</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block;margin-bottom:5px;font-size:0.9rem;">Full Name *</label>
+                    <input type="text" id="co-name" placeholder="Your full name" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block;margin-bottom:5px;font-size:0.9rem;">Mobile Number *</label>
+                    <input type="tel" id="co-mobile" placeholder="10-digit mobile" maxlength="10" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block;margin-bottom:5px;font-size:0.9rem;">Delivery Address *</label>
+                    <textarea id="co-address" rows="2" placeholder="House/Flat No, Street" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;"></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-size:0.9rem;">Landmark</label>
+                        <input type="text" id="co-landmark" placeholder="Near ..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-size:0.9rem;">Pin Code *</label>
+                        <input type="tel" id="co-pincode" placeholder="6 digits" maxlength="6" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-size:0.9rem;">City *</label>
+                        <input type="text" id="co-city" list="city-options" placeholder="Your city" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;">
+                        <datalist id="city-options">
+                            <option value="Tirurkad"></option>
+                            <option value="Mankada"></option>
+                            <option value="Perinthalmanna"></option>
+                            <option value="Malappuram"></option>
+                            <option value="Manjeri"></option>
+                            <option value="Kottakkal"></option>
+                        </datalist>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-size:0.9rem;">State *</label>
+                        <select id="co-state" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: var(--font);">
+                            <option value="" disabled selected>Select your state</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display:block;margin-bottom:5px;font-size:0.9rem;">Payment Method *</label>
+                    <div class="payment-options" style="display:flex;flex-direction:column;gap:10px;">
+                        <label class="payment-option" style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #ddd;border-radius:8px;cursor:pointer;" onclick="document.getElementById('pay-cod').checked=true; toggleUPIDisplay(false)">
+                            <input type="radio" name="pay" id="pay-cod" value="COD" checked>
+                            <div><h4 style="margin:0;font-size:1rem;">Cash on Delivery</h4><p style="margin:0;font-size:0.8rem;color:var(--text-light);">Pay when delivered</p></div>
+                        </label>
+                        <label class="payment-option" style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #ddd;border-radius:8px;cursor:pointer;" onclick="document.getElementById('pay-upi').checked=true; toggleUPIDisplay(true)">
+                            <input type="radio" name="pay" id="pay-upi" value="UPI">
+                            <div><h4 style="margin:0;font-size:1rem;">UPI Payment</h4><p style="margin:0;font-size:0.8rem;color:var(--text-light);">GPay, PhonePe, Paytm</p></div>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Beautiful UPI QR Section -->
+                <div id="upi-qr-section" class="upi-pay-section hidden" style="margin-bottom:20px;text-align:center;">
+                    <div class="qr-container" style="margin-bottom: 10px;display:inline-block;padding:10px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                        <img id="qr-img" src="" alt="UPI QR Code" style="width:150px;height:150px;">
+                    </div>
+                    <div class="upi-id-box" style="font-weight:600;margin-bottom:10px;">brandofurniture23@okicici</div>
+                    <p class="upi-hint" style="margin-bottom:15px;font-size:0.9rem;">Pay amount <strong id="upi-total-display">₹0</strong> via any UPI app.</p>
+                    <div style="background:#f8fafc; padding:15px; border-radius:10px; text-align:left;">
+                        <label style="font-weight:600; color:#1e293b; margin-bottom:8px; display:block; font-size:0.9rem;">Step 1: Complete Payment</label>
+                        <button type="button" class="btn btn-gold full" style="margin-bottom:15px;" id="upi-pay-btn">
+                            Open GPay / PhonePe / Paytm
+                        </button>
+                        <label style="font-weight:600; color:#1e293b; margin-bottom:8px; display:block; font-size:0.9rem;">Step 2: Enter Transaction ID to Confirm</label>
+                        <input type="text" id="co-utr" placeholder="12-digit UTR No. (e.g. 412356...)" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; font-family:var(--font);">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total</span>
-                <span id="cart-total">₹0</span>
+
+        <div class="cart-footer" id="cart-footer">
+            <div class="cart-total" style="margin-bottom: 10px;">
+                <span>Total Amount:</span>
+                <span id="cart-total" style="font-size:1.3rem;font-weight:bold;color:var(--text);">₹0</span>
             </div>
-            <button onclick="openCheckout()" class="btn btn-gold full">Proceed to Checkout</button>
+            <button onclick="placeOrder()" class="btn btn-gold full" id="place-order-btn" style="font-size:1.1rem;padding:15px;"><ion-icon name="checkmark-circle" style="margin-right:5px;vertical-align:middle;"></ion-icon> <span id="btn-text">Place Order</span></button>
         </div>
     </div>
 
