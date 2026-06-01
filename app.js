@@ -10,8 +10,8 @@ async function fetchProducts() {
             products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             console.log("Loaded from Firebase:", products.length);
         } else {
-            // Local Fallback (Development only)
-            const response = await fetch(`/api/products?t=${Date.now()}`);
+            // Local Fallback (Development or Static)
+            const response = await fetch(`products.json?t=${Date.now()}`);
             products = await response.json();
         }
 
@@ -35,7 +35,7 @@ async function fetchCategories() {
             categories = snapshot.docs.map(doc => doc.data());
             console.log("Loaded categories from Firebase:", categories.length);
         } else {
-            const response = await fetch(`/api/categories?t=${Date.now()}`);
+            const response = await fetch(`categories.json?t=${Date.now()}`);
             categories = await response.json();
         }
         

@@ -735,7 +735,7 @@
         }
 
         function loadHistory() {
-            fetch(`/api/order-history?t=${Date.now()}`)
+            fetch(`order_history.json?t=${Date.now()}`)
                 .then(r => r.json())
                 .then(history => {
                     renderOrderTable('history-table', history, true);
@@ -763,7 +763,7 @@
                     processOrders(serverOrders);
                 });
             } else {
-                fetch(`/api/orders?t=${Date.now()}`).then(r => r.json()).then(serverOrders => {
+                fetch(`orders.json?t=${Date.now()}`).then(r => r.json()).then(serverOrders => {
                     processOrders(serverOrders);
                 }).catch((err) => {
                     console.error('Order load failed:', err);
@@ -923,7 +923,7 @@
                     renderProductTable(products);
                 });
             } else {
-                fetch(`/api/products?t=${Date.now()}`).then(r => r.json()).then(products => {
+                fetch(`products.json?t=${Date.now()}`).then(r => r.json()).then(products => {
                     renderProductTable(products || []);
                 }).catch(err => alert('Failed to load products: ' + err));
             }
@@ -1161,7 +1161,7 @@
                     updateCategoryDropdown(cats || []);
                 });
             } else {
-                fetch(`/api/categories?t=${Date.now()}`)
+                fetch(`categories.json?t=${Date.now()}`)
                     .then(r => r.json())
                     .then(cats => {
                         renderCategoryTable(cats || []);
